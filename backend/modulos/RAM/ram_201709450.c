@@ -11,8 +11,6 @@
 /* Header para usar la lib seq_file y manejar el archivo en /proc*/
 #include <linux/seq_file.h>
 
-#include <sys/sysinfo.h>
-
 #include <linux/mm.h>
 
 MODULE_LICENSE("GPL");
