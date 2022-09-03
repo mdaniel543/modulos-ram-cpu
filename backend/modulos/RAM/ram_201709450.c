@@ -18,7 +18,7 @@ MODULE_DESCRIPTION("Practica 2 Sistemas Operativos 1");
 MODULE_AUTHOR("Marvin Daniel Rodriguez Felix"); 
 
 //Funcion que se ejecutara cada vez que se lea el archivo con el comando CAT
-static int escribir_archivo(struct seq_file *archivo, void *v)
+static int escribir_archivo(struct seq_file *file, void *v)
 {   
     struct sysinfo inf;
     si_meminfo(&inf);
