@@ -4,10 +4,9 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
-	"net/http"
+	"os/exec"
 
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/gorilla/mux"
 )
 
 type ram struct {
@@ -30,10 +29,11 @@ func MySQLConn() *sql.DB {
 	return db
 }
 
-func postRam(w http.ResponseWriter, r *http.Request) {
+func postRam(data string) {
 	var ram ram
-	_ = json.NewDecoder(r.Body).Decode(&ram)
-	stmt, err := conn.Prepare("INSERT INTO ram(total, used, free, percentage) VALUES(?, ?, ?, ?)")
+	json.Unmarshal([]byte(data), &ram)
+	fmt.Println(ram)
+	/*stmt, err := conn.Prepare("INSERT INTO ram(total, used, free, percentage) VALUES(?, ?, ?, ?)")
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -41,43 +41,18 @@ func postRam(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println(ram)
-}
-
-func getRam(w http.ResponseWriter, r *http.Request) {
-	var ram ram
-	var err = conn.QueryRow("SELECT total, used, free, percentage FROM ram ORDER BY id DESC LIMIT 1").Scan(&ram.total, &ram.used, &ram.free, &ram.percentage)
-	if err != nil {
-		fmt.Println(err)
-	}
-	fmt.Println(ram)
-}
-
-func getRams(w http.ResponseWriter, r *http.Request) {
-	var rams []ram
-	rows, err := conn.Query("SELECT total, used, free, percentage FROM ram")
-	if err != nil {
-		fmt.Println(err)
-	}
-	for rows.Next() {
-		var ram ram
-		err = rows.Scan(&ram.total, &ram.used, &ram.free, &ram.percentage)
-		if err != nil {
-			fmt.Println(err)
-		}
-		rams = append(rams, ram)
-	}
-	fmt.Println(rams)
+	fmt.Println("Datos insertados")*/
 }
 
 func main() {
-	router := mux.NewRouter()
-	router.HandleFunc("/rams", getRams).Methods("GET")
-	router.HandleFunc("/ram", getRam).Methods("GET")
-	router.HandleFunc("/ram", postRam).Methods("POST")
-	fmt.Println("Server on port", 8000)
-	err := http.ListenAndServe(":8000", router)
+	fmt.Println("Datos obtenidos de la memoria RAM")
+
+	cmd := exec.Command("sh", "-c", "cat /proc/ram_201709450")
+	out, err := cmd.CombinedOutput()
 	if err != nil {
 		fmt.Println(err)
 	}
+	output := string(out[:])
+	fmt.Println(output)
+	postRam(output)
 }
