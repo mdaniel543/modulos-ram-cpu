@@ -9,11 +9,11 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-type ram struct {
-	total      int `json:"total"`
-	used       int `json:"used"`
-	free       int `json:"free"`
-	percentage int `json:"percentage"`
+type Ram struct {
+	Total      int `json:"total"`
+	Free       int `json:"free"`
+	Used       int `json:"used"`
+	Percentage int `json:"percentage"`
 }
 
 var conn = MySQLConn()
@@ -32,19 +32,19 @@ func MySQLConn() *sql.DB {
 func postRam(data string) {
 	fmt.Println("Insertando datos en la base de datos")
 	fmt.Println(data)
-	var ram ram
+	var ram Ram
 	json.Unmarshal([]byte(data), &ram)
-	fmt.Println(ram.free, ram.percentage, ram.total, ram.used)
+	fmt.Println(ram)
 
-	/*stmt, err := conn.Prepare("INSERT INTO ram(total, used, free, percentage) VALUES(?, ?, ?, ?)")
+	stmt, err := conn.Prepare("INSERT INTO ram(total, used, free, percentage) VALUES(?, ?, ?, ?)")
 	if err != nil {
 		fmt.Println(err)
 	}
-	_, err = stmt.Exec(ram.total, ram.used, ram.free, ram.percentage)
+	_, err = stmt.Exec(ram.Total, ram.Used, ram.Free, ram.Percentage)
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println("Datos insertados")*/
+	fmt.Println("Datos insertados")
 }
 
 func main() {

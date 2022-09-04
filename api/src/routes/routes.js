@@ -8,7 +8,7 @@ router.get("/ram/last", ram.getLastRam);
 
 router.get("/ram", ram.getRam);
 
-router.get("/process/last", process.getLastProcess);
+router.get("/last/process", process.getLastProcess);
 
 router.get("/process/:id", process.getProcess);
 
