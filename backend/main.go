@@ -30,9 +30,12 @@ func MySQLConn() *sql.DB {
 }
 
 func postRam(data string) {
+	fmt.Println("Insertando datos en la base de datos")
+	fmt.Println(data)
 	var ram ram
 	json.Unmarshal([]byte(data), &ram)
-	fmt.Println(ram)
+	fmt.Println(ram.free, ram.percentage, ram.total, ram.used)
+
 	/*stmt, err := conn.Prepare("INSERT INTO ram(total, used, free, percentage) VALUES(?, ?, ?, ?)")
 	if err != nil {
 		fmt.Println(err)

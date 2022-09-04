@@ -22,12 +22,12 @@ static int escribir_archivo(struct seq_file *file, void *v)
 {   
     struct sysinfo inf;
     si_meminfo(&inf);
-    seq_printf(file, "{\n");
-    seq_printf(file,"\"total\": %lu,\n",inf.totalram*4/1024);
-    seq_printf(file,"\"free\": %lu,\n", inf.freeram*4/1024);
-    seq_printf(file, "\"used\": %lu,\n", (inf.totalram - inf.freeram)* 4/1024); 
-    seq_printf(file,"\"percentage\": %lu\n", ((inf.totalram - inf.freeram)*100)/inf.totalram);
-    seq_printf(file, "}\n");
+    seq_printf(file, "{");
+    seq_printf(file,"\"total\": %lu,",inf.totalram*4/1024);
+    seq_printf(file,"\"free\": %lu,", inf.freeram*4/1024);
+    seq_printf(file, "\"used\": %lu,", (inf.totalram - inf.freeram)* 4/1024); 
+    seq_printf(file,"\"percentage\": %lu", ((inf.totalram - inf.freeram)*100)/inf.totalram);
+    seq_printf(file, "}");
     return 0;
 }
 
