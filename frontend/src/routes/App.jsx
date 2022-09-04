@@ -5,29 +5,31 @@ import DoughnutChart from "../components/DoughnutChart";
 import AreaChart from "../components/AreaChart";
 import axios from "axios";
 import TableProcess from "../components/TableProcess";
-import {useState, useEffect} from 'react'
+import { useState, useEffect } from "react";
 
 function App() {
   const [ram, setRam] = useState({
     free: 0,
     used: 0,
     percentage: 0,
-  })
+  });
 
-  const [rams, setRams] = useState([])
+  const [rams, setRams] = useState([]);
 
   useEffect(() => {
-    const resp = axios.get('http://localhost:3000/api/ram/last')
-    resp.then((response) => {
-      setRam(response.data[0])
-      console.log(response.data[0])
-    })
-    const resp2 = axios.get('http://localhost:3000/api/ram')
-    resp2.then((response) => {
-      setRams(response.data)
-    })
-  }, [])
-
+    const interval = setInterval(() => {
+      const resp = axios.get("http://localhost:3000/api/ram/last");
+      resp.then((response) => {
+        setRam(response.data[0]);
+        console.log(response.data[0]);
+      });
+      const resp2 = axios.get("http://localhost:3000/api/ram");
+      resp2.then((response) => {
+        setRams(response.data);
+      });
+    }, 6500);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <Container style={{ marginTop: "3rem" }}>
@@ -40,13 +42,20 @@ function App() {
         style={{ marginTop: "3rem" }}
       >
         <Tab eventKey="ram" title="RAM">
-          <DoughnutChart data={ram} title={"RAM"}/>
-          <h2 style={{ textAlign: "center", marginTop: "20px" }}> {ram.percentage}% </h2>
-          <AreaChart data={rams}/>
+          {ram && (
+            <>
+              <DoughnutChart data={ram} title={"RAM"} />
+              <h2 style={{ textAlign: "center", marginTop: "20px" }}>
+                {" "}
+                {ram.percentage}%{" "}
+              </h2>
+              <AreaChart data={rams} />{" "}
+            </>
+          )}
         </Tab>
         <Tab eventKey="cpu" title="CPU"></Tab>
         <Tab eventKey="process" title="PROCESOS">
-          <TableProcess data={rams}/>
+          <TableProcess data={rams} />
         </Tab>
       </Tabs>
     </Container>

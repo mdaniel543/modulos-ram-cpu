@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os/exec"
+	"time"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -48,14 +49,16 @@ func postRam(data string) {
 }
 
 func main() {
-	fmt.Println("Datos obtenidos de la memoria RAM")
-
-	cmd := exec.Command("sh", "-c", "cat /proc/ram_201709450")
-	out, err := cmd.CombinedOutput()
-	if err != nil {
-		fmt.Println(err)
+	for {
+		fmt.Println("Obteniendo datos ...")
+		cmd := exec.Command("sh", "-c", "cat /proc/ram_201709450")
+		out, err := cmd.CombinedOutput()
+		if err != nil {
+			fmt.Println(err)
+		}
+		output := string(out[:])
+		fmt.Println(output)
+		postRam(output)
+		time.Sleep(5 * time.Second)
 	}
-	output := string(out[:])
-	fmt.Println(output)
-	postRam(output)
 }
