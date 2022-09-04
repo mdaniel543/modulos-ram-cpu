@@ -24,7 +24,6 @@ ChartJS.register(
 );
 
 function AreaChart({ data }) {
-
   const options = {
     responsive: true,
     maintainAspectRatio: false,
@@ -35,6 +34,14 @@ function AreaChart({ data }) {
       title: {
         display: true,
         text: "Uso de RAM",
+      },
+    },
+    scales: {
+      
+      y: {
+        min: 0,
+        max: 100,
+        stepSize: 5,
       },
     },
   };
@@ -55,16 +62,16 @@ function AreaChart({ data }) {
   };
   return (
     <div
-    style={{
+      style={{
         marginTop: "rem",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        height: "100%",
+        height: "40rem",
         width: "100%",
       }}
     >
-      <Line options={options} data={datas} height="500%"/>
+      <Line options={options} data={datas} height="500%" />
     </div>
   );
 }

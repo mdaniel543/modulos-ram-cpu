@@ -59,6 +59,6 @@ func main() {
 		output := string(out[:])
 		fmt.Println(output)
 		postRam(output)
-		time.Sleep(5 * time.Second)
+		time.Sleep(6 * time.Second)
 	}
 }
