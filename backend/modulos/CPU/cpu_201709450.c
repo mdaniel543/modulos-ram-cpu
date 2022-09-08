@@ -21,7 +21,7 @@ struct mm_struct *mm;
 // Funcion que se ejecutara cada vez que se lea el archivo con el comando CAT
 static int escribir_archivo(struct seq_file *archivo, void *v)
 {
-    seq_printf(archivo, "{\n\"processes\":[ ");
+    seq_printf(archivo, "[\n");
     for_each_process(cpu)
     {
         seq_printf(archivo, "{");
@@ -62,7 +62,7 @@ static int escribir_archivo(struct seq_file *archivo, void *v)
         }
         seq_printf(archivo, "]\n},\n");
     }
-    seq_printf(archivo, "]\n}\n");
+    seq_printf(archivo, "]\n");
     return 0;
 }
 

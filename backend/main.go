@@ -26,10 +26,6 @@ type Process struct {
 	Children []Process `json:"children"`
 }
 
-type ArrayProcess struct {
-	Processes []Process `json:"processes"`
-}
-
 var conn = MySQLConn()
 
 func MySQLConn() *sql.DB {
@@ -63,11 +59,10 @@ func postRam(data string) {
 
 func postProcesses(data string) {
 	fmt.Println("Insertando procesos en la base de datos")
-	var processes ArrayProcess
+	var processes []Process
 	json.Unmarshal([]byte(data), &processes)
-	fmt.Println(processes.Processes)
 
-	for _, process := range processes.Processes {
+	for _, process := range processes {
 		stmt, err := conn.Prepare("INSERT INTO process(pid, name, user, state, memory) VALUES(?, ?, ?, ?, ?)")
 		if err != nil {
 			fmt.Println(err)
