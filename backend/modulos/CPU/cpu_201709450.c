@@ -32,7 +32,7 @@ static int escribir_archivo(struct seq_file *archivo, void *v)
         mm = get_task_mm(cpu);
         if (mm)
         {
-            seq_printf(archivo, "\"memory\":%f,\n", ((get_mm_rss(mm))/(1024.0*1024.0))*100.0);
+            seq_printf(archivo, "\"memory\":%lu,\n", get_mm_rss(mm));
             mmput(mm);
         }
         else
@@ -51,7 +51,7 @@ static int escribir_archivo(struct seq_file *archivo, void *v)
             mm = get_task_mm(child);
             if (mm)
             {
-                seq_printf(archivo, "\"memory\":%f,\n", ((get_mm_rss(mm))/(1024.0*1024.0))*100.0);
+                seq_printf(archivo, "\"memory\":%lu,\n", get_mm_rss(mm));
                 mmput(mm);
             }
             else
