@@ -28,7 +28,7 @@ static int escribir_archivo(struct seq_file *archivo, void *v)
         seq_printf(archivo, "\"pid\":%d,\n", cpu->pid);
         seq_printf(archivo, "\"name\":\"%s\",\n", cpu->comm);
         seq_printf(archivo, "\"user\": %u,\n", cpu->cred->uid.val);
-        seq_printf(archivo, "\"state\":%ld,\n", cpu->__state);
+        seq_printf(archivo, "\"state\":%d,\n", cpu->__state);
         mm = get_task_mm(cpu);
         if (mm)
         {
@@ -47,7 +47,7 @@ static int escribir_archivo(struct seq_file *archivo, void *v)
             seq_printf(archivo, "\"pid\":%d,\n", child->pid);
             seq_printf(archivo, "\"name\":\"%s\",\n", child->comm);
             seq_printf(archivo, "\"user\": %u,\n", child->cred->uid.val);
-            seq_printf(archivo, "\"state\":%ld\n", child->state);
+            seq_printf(archivo, "\"state\":%d\n", child->__state);
             mm = get_task_mm(child);
             if (mm)
             {
