@@ -17,6 +17,7 @@
 
 #include <linux/sched/mm.h> // get_task_mm(), mmput()
 #include <linux/mm.h>       // get_mm_rss()
+#include <linux/fs.h>
 
 MODULE_LICENSE("GPL");
 MODULE_DESCRIPTION("Practica 2 Modulo CPU");
@@ -38,7 +39,7 @@ static int escribir_archivo(struct seq_file *archivo, void *v)
         seq_printf(archivo, "\"name\":\"%s\",\n", cpu->comm);
         seq_printf(archivo, "\"user\": %u,\n", cpu->cred->uid.val);
         seq_printf(archivo, "\"state\":%ld\n", cpu->state);
-        mm = get_task_mm(task);
+        mm = get_task_mm(cpu);
         if (mm)
         {
             seq_printf(archivo, ",\"memory\":%lu\n", get_mm_rss(mm));
