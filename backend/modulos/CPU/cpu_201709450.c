@@ -16,6 +16,9 @@
 #include <linux/sched/signal.h>
 
 
+#include <linux/sched/mm.h>     // get_task_mm(), mmput()
+#include <linux/mm.h>           // get_mm_rss()
+
 
 MODULE_LICENSE("GPL");
 MODULE_DESCRIPTION("Practica 2 Modulo CPU");
@@ -24,6 +27,7 @@ MODULE_AUTHOR("Marvin Daniel Rodriguez Felix");
 struct task_struct *cpu;
 struct task_struct *child;
 struct list_head *lstProcess;
+struct mm_struct *mm;
 
 // Funcion que se ejecutara cada vez que se lea el archivo con el comando CAT
 static int escribir_archivo(struct seq_file *archivo, void *v)
@@ -36,7 +40,11 @@ static int escribir_archivo(struct seq_file *archivo, void *v)
         seq_printf(archivo,"\"name\":\"%s\",\n",task->comm);
         seq_printf(archivo, "\"user\": %u,\n",task->cred->uid.val);
         seq_printf(archivo,"\"state\":%ld\n",task->state);
-
+        mm = get_task_mm(task);
+        if (mm) {
+            seq_printf(archivo, ",\"memory\":%lu\n", get_mm_rss(mm));
+            mmput(mm);
+        }
         seq_printf(archivo, "{\n\"children\":[ ");
         list_for_each(lstProcess, &(cpu->children))
         {
@@ -46,11 +54,16 @@ static int escribir_archivo(struct seq_file *archivo, void *v)
             seq_printf(archivo,"\"name\":\"%s\",\n",child->comm);
             seq_printf(archivo, "\"user\": %u,\n",child->cred->uid.val);
             seq_printf(archivo,"\"state\":%ld\n",child->state);
-
+            mm = get_task_mm(child);
+            if (mm) {
+                seq_printf(archivo, ",\"memory\":%lu\n", get_mm_rss(mm));
+                mmput(mm);
+            }
             seq_printf(archivo, "},\n");
         }
-        seq_printf(file, "}\n");
+        seq_printf(archivo, "]\n},\n");
     }
+    seq_printf(archivo, "]\n}\n");
     return 0;
 }
 
@@ -70,7 +83,7 @@ static struct proc_ops operaciones =
 static int _insert(void)
 {
     proc_create("ram_modulo", 0, NULL, &operaciones);
-    printk(KERN_INFO "Segundo Semestre 2022\n");
+    printk(KERN_INFO "Marvin Daniel Rodriguez Felix\n");
     return 0;
 }
 
@@ -78,7 +91,7 @@ static int _insert(void)
 static void _remove(void)
 {
     remove_proc_entry("ram_modulo", NULL);
-    printk(KERN_INFO "Marvin Daniel Rodriguez Felix\n");
+    printk(KERN_INFO "Segundo Semestre 2022\n");
 }
 
 module_init(_insert);
