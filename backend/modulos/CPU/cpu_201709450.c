@@ -8,7 +8,6 @@
 #include <linux/sched/mm.h> // get_task_mm(), mmput()
 #include <linux/mm.h>       // get_mm_rss()
 
-
 MODULE_LICENSE("GPL");
 MODULE_DESCRIPTION("Practica 2 Modulo CPU");
 MODULE_AUTHOR("Marvin Daniel Rodriguez Felix");
@@ -27,7 +26,7 @@ static int escribir_archivo(struct seq_file *archivo, void *v)
         seq_printf(archivo, "{ \n");
         seq_printf(archivo, "\"pid\":%d,\n", cpu->pid);
         seq_printf(archivo, "\"name\":\"%s\",\n", cpu->comm);
-        seq_printf(archivo, "\"user\": %u,\n",cpu->cred->uid.val);
+        seq_printf(archivo, "\"user\": %u,\n", cpu->cred->uid.val);
         seq_printf(archivo, "\"state\":%d,\n", cpu->__state);
         mm = get_task_mm(cpu);
         if (mm)
@@ -39,10 +38,10 @@ static int escribir_archivo(struct seq_file *archivo, void *v)
         {
             seq_printf(archivo, "\"memory\":%d,\n", 0);
         }
-        seq_printf(archivo, "\"children\":[");
+        seq_printf(archivo, "\"children\":[\n");
         list_for_each(lstProcess, &(cpu->children))
         {
-            seq_printf(archivo, "\n{\n");
+            seq_printf(archivo, "{\n");
             child = list_entry(lstProcess, struct task_struct, sibling);
             seq_printf(archivo, "\"pid\":%d,\n", child->pid);
             seq_printf(archivo, "\"name\":\"%s\",\n", child->comm);
@@ -58,9 +57,24 @@ static int escribir_archivo(struct seq_file *archivo, void *v)
             {
                 seq_printf(archivo, "\"memory\":%d,\n", 0);
             }
-            seq_printf(archivo, "},");
+            seq_printf(archivo, "}");
+            if (lstProcess->next != &(cpu->children))
+            {
+                seq_printf(archivo, ",\n");
+            }else 
+            {
+                seq_printf(archivo, "\n");
+            }
         }
-        seq_printf(archivo, "]\n},\n");
+        seq_printf(archivo, "]\n}");
+        if (cpu->next_task->pid != 0)
+        {
+            seq_printf(archivo, ",\n");
+        }
+        else
+        {
+            seq_printf(archivo, "\n");
+        }
     }
     seq_printf(archivo, "]\n");
     return 0;
