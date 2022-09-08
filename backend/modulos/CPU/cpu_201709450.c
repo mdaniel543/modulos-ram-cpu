@@ -67,15 +67,16 @@ static int escribir_archivo(struct seq_file *archivo, void *v)
             }
         }
         seq_printf(archivo, "]\n}");
-        if (cpu->next_task->pid != 0)
+        next = list_entry(cpu->next, struct task_struct, sibling);
+        if (next != &init_task)
         {
             seq_printf(archivo, ",\n");
-        }
-        else
+        }else    
         {
             seq_printf(archivo, "\n");
         }
     }
+    se
     seq_printf(archivo, "]\n");
     return 0;
 }
