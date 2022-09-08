@@ -27,12 +27,12 @@ static int escribir_archivo(struct seq_file *archivo, void *v)
         seq_printf(archivo, "{");
         seq_printf(archivo, "\"pid\":%d,\n", cpu->pid);
         seq_printf(archivo, "\"name\":\"%s\",\n", cpu->comm);
-        seq_printf(archivo, "\"user\": %u,\n", cpu->cred->uid.val);
+        seq_printf(archivo, "\"user\": %u,\n",cpu->cred->uid.val);
         seq_printf(archivo, "\"state\":%d,\n", cpu->__state);
         mm = get_task_mm(cpu);
         if (mm)
         {
-            seq_printf(archivo, ",\"memory\":%lu\n", get_mm_rss(mm));
+            seq_printf(archivo, ",\"memory\":%lu\n", (get_mm_rss(mm))*100);
             mmput(mm);
         }
         else
@@ -51,7 +51,7 @@ static int escribir_archivo(struct seq_file *archivo, void *v)
             mm = get_task_mm(child);
             if (mm)
             {
-                seq_printf(archivo, ",\"memory\":%lu\n", get_mm_rss(mm));
+                seq_printf(archivo, ",\"memory\":%lu\n", (get_mm_rss(mm))*100);
                 mmput(mm);
             }
             else
@@ -81,7 +81,7 @@ static struct proc_ops operaciones =
 // Funcion a ejecuta al insertar el modulo en el kernel con insmod
 static int _insert(void)
 {
-    proc_create("ram_modulo", 0, NULL, &operaciones);
+    proc_create("cpu_modulo", 0, NULL, &operaciones);
     printk(KERN_INFO "Marvin Daniel Rodriguez Felix\n");
     return 0;
 }
