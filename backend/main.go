@@ -63,17 +63,16 @@ func postRam(data string) {
 
 func postProcesses(data string) {
 	fmt.Println("Insertando procesos en la base de datos")
-	fmt.Println(data)
 	var processes ArrayProcess
 	json.Unmarshal([]byte(data), &processes)
-	fmt.Println(processes)
+	fmt.Println(processes.Processes)
 
 	for _, process := range processes.Processes {
 		stmt, err := conn.Prepare("INSERT INTO process(pid, name, user, state, memory) VALUES(?, ?, ?, ?, ?)")
 		if err != nil {
 			fmt.Println(err)
 		}
-		_, err = stmt.Exec(process.Pid, process.Name, process.User, process.State, process.Memory)
+		_, err = stmt.Exec(process.Pid, process.Name, process.User, process.State, (process.Memory/(1024.0*1024.0))*100.0)
 		if err != nil {
 			fmt.Println(err)
 		}
@@ -82,7 +81,7 @@ func postProcesses(data string) {
 			if err != nil {
 				fmt.Println(err)
 			}
-			_, err = stmt.Exec(child.Pid, child.Name, child.User, child.State, child.Memory, process.Pid)
+			_, err = stmt.Exec(child.Pid, child.Name, child.User, child.State, (child.Memory/(1024.0*1024.0))*100.0, process.Pid)
 			if err != nil {
 				fmt.Println(err)
 			}
