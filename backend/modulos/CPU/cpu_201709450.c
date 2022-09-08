@@ -15,10 +15,8 @@
 
 #include <linux/sched/signal.h>
 
-
-#include <linux/sched/mm.h>     // get_task_mm(), mmput()
-#include <linux/mm.h>           // get_mm_rss()
-
+#include <linux/sched/mm.h> // get_task_mm(), mmput()
+#include <linux/mm.h>       // get_mm_rss()
 
 MODULE_LICENSE("GPL");
 MODULE_DESCRIPTION("Practica 2 Modulo CPU");
@@ -36,28 +34,38 @@ static int escribir_archivo(struct seq_file *archivo, void *v)
     for_each_process(cpu)
     {
         seq_printf(archivo, "{");
-        seq_printf(archivo,"\"pid\":%d,\n",cpu->pid);
-        seq_printf(archivo,"\"name\":\"%s\",\n",task->comm);
-        seq_printf(archivo, "\"user\": %u,\n",task->cred->uid.val);
-        seq_printf(archivo,"\"state\":%ld\n",task->state);
+        seq_printf(archivo, "\"pid\":%d,\n", cpu->pid);
+        seq_printf(archivo, "\"name\":\"%s\",\n", task->comm);
+        seq_printf(archivo, "\"user\": %u,\n", task->cred->uid.val);
+        seq_printf(archivo, "\"state\":%ld\n", task->state);
         mm = get_task_mm(task);
-        if (mm) {
+        if (mm)
+        {
             seq_printf(archivo, ",\"memory\":%lu\n", get_mm_rss(mm));
             mmput(mm);
+        }
+        else
+        {
+            seq_printf(archivo, ",\"memory\":%lu\n", 0);
         }
         seq_printf(archivo, "{\n\"children\":[ ");
         list_for_each(lstProcess, &(cpu->children))
         {
             seq_printf(archivo, "{");
             child = list_entry(lstProcess, struct task_struct, sibling);
-            seq_printf(archivo,"\"pid\":%d,\n",child->pid);
-            seq_printf(archivo,"\"name\":\"%s\",\n",child->comm);
-            seq_printf(archivo, "\"user\": %u,\n",child->cred->uid.val);
-            seq_printf(archivo,"\"state\":%ld\n",child->state);
+            seq_printf(archivo, "\"pid\":%d,\n", child->pid);
+            seq_printf(archivo, "\"name\":\"%s\",\n", child->comm);
+            seq_printf(archivo, "\"user\": %u,\n", child->cred->uid.val);
+            seq_printf(archivo, "\"state\":%ld\n", child->state);
             mm = get_task_mm(child);
-            if (mm) {
+            if (mm)
+            {
                 seq_printf(archivo, ",\"memory\":%lu\n", get_mm_rss(mm));
                 mmput(mm);
+            }
+            else
+            {
+                seq_printf(archivo, ",\"memory\":%lu\n", 0);
             }
             seq_printf(archivo, "},\n");
         }
