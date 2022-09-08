@@ -24,7 +24,7 @@ static int escribir_archivo(struct seq_file *archivo, void *v)
     seq_printf(archivo, "[\n");
     for_each_process(cpu)
     {
-        seq_printf(archivo, "{");
+        seq_printf(archivo, "{ \n");
         seq_printf(archivo, "\"pid\":%d,\n", cpu->pid);
         seq_printf(archivo, "\"name\":\"%s\",\n", cpu->comm);
         seq_printf(archivo, "\"user\": %u,\n",cpu->cred->uid.val);
@@ -42,7 +42,7 @@ static int escribir_archivo(struct seq_file *archivo, void *v)
         seq_printf(archivo, "\"children\":[");
         list_for_each(lstProcess, &(cpu->children))
         {
-            seq_printf(archivo, "{");
+            seq_printf(archivo, "\n{\n");
             child = list_entry(lstProcess, struct task_struct, sibling);
             seq_printf(archivo, "\"pid\":%d,\n", child->pid);
             seq_printf(archivo, "\"name\":\"%s\",\n", child->comm);
@@ -58,7 +58,7 @@ static int escribir_archivo(struct seq_file *archivo, void *v)
             {
                 seq_printf(archivo, "\"memory\":%d,\n", 0);
             }
-            seq_printf(archivo, "},\n");
+            seq_printf(archivo, "},");
         }
         seq_printf(archivo, "]\n},\n");
     }
