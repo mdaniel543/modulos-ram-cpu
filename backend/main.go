@@ -63,7 +63,6 @@ func postProcesses(data string) {
 	var processes []Process
 	json.Unmarshal([]byte(data), &processes)
 	for _, process := range processes {
-		fmt.Println(process)
 		stmt, err := conn.Prepare("INSERT INTO process(pid, name, user, state, memory) VALUES(?, ?, ?, ?, ?)")
 		if err != nil {
 			fmt.Println(err)
@@ -73,7 +72,6 @@ func postProcesses(data string) {
 			fmt.Println(err)
 		}
 		for _, child := range process.Children {
-			fmt.Println(child)
 			stmt, err := conn.Prepare("INSERT INTO process(pid, name, user, state, memory, pid_padre) VALUES(?, ?, ?, ?, ?, ?)")
 			if err != nil {
 				fmt.Println(err)
