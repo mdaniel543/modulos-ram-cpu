@@ -89,7 +89,7 @@ static int _insert(void)
 // Funcion a ejecuta al remover el modulo del kernel con rmmod
 static void _remove(void)
 {
-    remove_proc_entry("cpu_modulo", NULL);
+    remove_proc_entry("cpu_201709450", NULL);
     printk(KERN_INFO "Segundo Semestre 2022\n");
 }
 
