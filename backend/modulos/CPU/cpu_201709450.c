@@ -35,9 +35,9 @@ static int escribir_archivo(struct seq_file *archivo, void *v)
     {
         seq_printf(archivo, "{");
         seq_printf(archivo, "\"pid\":%d,\n", cpu->pid);
-        seq_printf(archivo, "\"name\":\"%s\",\n", task->comm);
-        seq_printf(archivo, "\"user\": %u,\n", task->cred->uid.val);
-        seq_printf(archivo, "\"state\":%ld\n", task->state);
+        seq_printf(archivo, "\"name\":\"%s\",\n", cpu->comm);
+        seq_printf(archivo, "\"user\": %u,\n", cpu->cred->uid.val);
+        seq_printf(archivo, "\"state\":%ld\n", cpu->state);
         mm = get_task_mm(task);
         if (mm)
         {
@@ -46,7 +46,7 @@ static int escribir_archivo(struct seq_file *archivo, void *v)
         }
         else
         {
-            seq_printf(archivo, ",\"memory\":%lu\n", 0);
+            seq_printf(archivo, ",\"memory\":%d\n", 0);
         }
         seq_printf(archivo, "{\n\"children\":[ ");
         list_for_each(lstProcess, &(cpu->children))
@@ -65,7 +65,7 @@ static int escribir_archivo(struct seq_file *archivo, void *v)
             }
             else
             {
-                seq_printf(archivo, ",\"memory\":%lu\n", 0);
+                seq_printf(archivo, ",\"memory\":%d\n", 0);
             }
             seq_printf(archivo, "},\n");
         }
