@@ -14,7 +14,7 @@
 #include <linux/mm.h>
 
 MODULE_LICENSE("GPL");
-MODULE_DESCRIPTION("Practica 2 Sistemas Operativos 1"); 
+MODULE_DESCRIPTION("Practica 2 Modulo RAM"); 
 MODULE_AUTHOR("Marvin Daniel Rodriguez Felix"); 
 
 //Funcion que se ejecutara cada vez que se lea el archivo con el comando CAT
