@@ -32,12 +32,12 @@ static int escribir_archivo(struct seq_file *archivo, void *v)
         mm = get_task_mm(cpu);
         if (mm)
         {
-            seq_printf(archivo, ",\"memory\":%lu\n", (get_mm_rss(mm))*100);
+            seq_printf(archivo, "\"memory\":%lu,\n", (get_mm_rss(mm)/1024^2)*100);
             mmput(mm);
         }
         else
         {
-            seq_printf(archivo, ",\"memory\":%d\n", 0);
+            seq_printf(archivo, "\"memory\":%d,\n", 0);
         }
         seq_printf(archivo, "{\n\"children\":[ ");
         list_for_each(lstProcess, &(cpu->children))
@@ -47,16 +47,16 @@ static int escribir_archivo(struct seq_file *archivo, void *v)
             seq_printf(archivo, "\"pid\":%d,\n", child->pid);
             seq_printf(archivo, "\"name\":\"%s\",\n", child->comm);
             seq_printf(archivo, "\"user\": %u,\n", child->cred->uid.val);
-            seq_printf(archivo, "\"state\":%d\n", child->__state);
+            seq_printf(archivo, "\"state\":%d,\n", child->__state);
             mm = get_task_mm(child);
             if (mm)
             {
-                seq_printf(archivo, ",\"memory\":%lu\n", (get_mm_rss(mm))*100);
+                seq_printf(archivo, "\"memory\":%lu,\n", (get_mm_rss(mm)/1024^2)*100);
                 mmput(mm);
             }
             else
             {
-                seq_printf(archivo, ",\"memory\":%d\n", 0);
+                seq_printf(archivo, "\"memory\":%d,\n", 0);
             }
             seq_printf(archivo, "},\n");
         }
