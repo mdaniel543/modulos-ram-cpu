@@ -16,4 +16,6 @@ router.get("/process/:id/son", process.getProcessSon);
 
 router.get("/process", process.getProcesses);
 
+router.get("/count/process", process.countProcess);
+
 module.exports = router;

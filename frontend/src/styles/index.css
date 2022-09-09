@@ -1,0 +1,17 @@
+.nav.nav-pills .nav-link.active {
+    background-color:  #808080a4 ;
+    height: 3rem;
+    width: 90%;
+    color: #000000;
+    font-weight:  bold;
+}
+
+.nav.nav-pills .nav-link {
+    color: #000000;
+}
+
+.Bar {
+    border-right: #000000e1  2px solid ;
+    height: 46.5rem;
+    width: 18rem;
+}

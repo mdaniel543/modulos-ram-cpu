@@ -63,7 +63,7 @@ function AreaChart({ data }) {
   return (
     <div
       style={{
-        marginTop: "rem",
+        marginTop: "2rem",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
