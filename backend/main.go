@@ -138,7 +138,7 @@ func main() {
 		}
 		postProcesses(string(out[:]))
 		// ------------------------------------------------------------------
-		cpu := exec.Command("sh", "-c", "echo \"{ usage:$(vmstat 1 2|tail -1|awk '{print $15}') }\"")
+		cpu := exec.Command("sh", "-c", "echo \"{ usage:$(vmstat |tail -1|awk '{print $15}') }\"")
 		out, err = cpu.CombinedOutput()
 		if err != nil {
 			fmt.Println(err)
