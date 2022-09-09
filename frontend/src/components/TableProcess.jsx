@@ -2,10 +2,20 @@ import { useState } from "react";
 import Table from "react-bootstrap/Table";
 import Container from "react-bootstrap/esm/Container";
 import Button from "react-bootstrap/esm/Button";
+import axios from "axios";
 
 
-function TableProcess({ data, accion }) {
+function TableProcess({ data, accion, show, setSons }) {
   const columns = data[0] && Object.keys(data[0]);
+
+  const showHijos = (pid) => {
+    console.log(pid);
+    const resp = axios.get(`http://localhost:3000/api/son/process/${pid}`);
+    resp.then((res) => {
+      setSons(res.data);
+      show();
+    });
+  };
 
   const style = {
     top: 0,
@@ -19,7 +29,7 @@ function TableProcess({ data, accion }) {
 
   return (
     <>
-      <Container style={{ marginTop: "3rem" }}>
+      <Container style={{ marginTop: "2.5rem" }}>
         <div style={{ overflowY: "auto", height: "40rem" }}>
           <Table striped bordered hover>
             <thead>
@@ -52,11 +62,10 @@ function TableProcess({ data, accion }) {
                     <td>
                       <Button
                         size="sm"
-                        variant="primary"
-                        onClick={() => {
-                          setProcess(row);
-                          setShow(true);
-                        }}
+                        variant="dark"
+                        onClick={() => 
+                          showHijos(row.pid)
+                        }
                       >
                         ver hijos
                       </Button>

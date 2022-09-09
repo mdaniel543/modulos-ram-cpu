@@ -2,7 +2,7 @@ import Col from "react-bootstrap/Col";
 import Nav from "react-bootstrap/Nav";
 import Row from "react-bootstrap/Row";
 import Tab from "react-bootstrap/Tab";
-import Container from "react-bootstrap/Container";
+import Button from "react-bootstrap/esm/Button";
 import DoughnutChart from "../components/DoughnutChart";
 import AreaChart from "../components/AreaChart";
 import axios from "axios";
@@ -25,9 +25,9 @@ function App() {
   const [cpus, setCpus] = useState([]);
   const [process, setProcess] = useState([]);
   const [countProcess, setCountProcess] = useState([]);
+  const [processSon, setProcessSon] = useState([]);
 
   const [tab_key, setTab_key] = useState("cero");
-  const [pid, setPid] = useState(0);
   const [showHijos, setShowHijos] = useState(false);
 
   const [manage_ram, setManage_ram] = useState(false);
@@ -52,7 +52,7 @@ function App() {
     const resp4 = axios.get("http://localhost:3000/api/process");
     resp4.then((response) => {
       setProcess(response.data);
-    } );
+    });
   }, []);
 
   return (
@@ -190,13 +190,17 @@ function App() {
                         >
                           📈 Proceso Padres
                         </Nav.Link>
-                        <Nav.Link
-                          style={{ marginLeft: "20px", fontSize: 20 }}
-                          eventKey="third-3"
-                          onClick={() => setTab_key("third-3")}
-                        >
-                          📉 Proceso Hijos
-                        </Nav.Link>
+                        {showHijos ? (
+                          <Nav.Link
+                            style={{ marginLeft: "20px", fontSize: 20 }}
+                            eventKey="third-3"
+                            onClick={() => setTab_key("third-3")}
+                          >
+                            📉 Proceso Hijos
+                          </Nav.Link>
+                        ) : (
+                          <></>
+                        )}
                       </>
                     ) : (
                       <></>
@@ -237,17 +241,53 @@ function App() {
                 <Tab.Pane eventKey="second">{cpu && <></>}</Tab.Pane>
                 <Tab.Pane eventKey="second-2">{cpus && <></>}</Tab.Pane>
                 <Tab.Pane eventKey="third">
-                  {countProcess && <>
-                    <TableProcess data={countProcess} accion={false} />
-                  </>
-                }
+                  {countProcess && (
+                    <>
+                      <TableProcess data={countProcess} accion={false} />
+                    </>
+                  )}
                 </Tab.Pane>
-                <Tab.Pane eventKey="third-2">{process && 
-                  <>
-                    <TableProcess data={process} accion={true} />
-                  </>
-                }</Tab.Pane>
-                <Tab.Pane eventKey="third-3">{process && <></>}</Tab.Pane>
+                <Tab.Pane eventKey="third-2">
+                  {process && (
+                    <>
+                      <TableProcess
+                        data={process}
+                        accion={true}
+                        show={() => {
+                          setTab_key("third-3");
+                          setShowHijos(true);
+                        }}
+                        setSons={setProcessSon}
+                      />
+                    </>
+                  )}
+                </Tab.Pane>
+                <Tab.Pane eventKey="third-3">
+                  {showHijos && (
+                    <>
+                      <Button
+                        size="xl"
+                        variant="outline-danger"
+                        aria-label="Hide"
+                        style={{ marginLeft: "95%", marginTop: "2%" }}
+                        onClick={() => {
+                          setTab_key("third-2");
+                          setShowHijos(false);
+                          setProcessSon([]);
+                        }}
+                      >
+                        ❌
+                      </Button>
+                      {processSon.length > 0 ? (
+                        <TableProcess data={processSon} accion={false} />
+                      ) : (
+                        <h1 style={{ marginTop: "15rem", textAlign: "center" }}>
+                          No hay procesos hijos
+                        </h1>
+                      )}
+                    </>
+                  )}
+                </Tab.Pane>
                 <Tab.Pane eventKey="five">
                   <div
                     style={{

@@ -23,7 +23,7 @@ async function getProcessSon(req, res) {
   const { id } = req.params;
   const connection = await pool.getConnection();
   const process = await connection.query(
-    "SELECT * FROM process WHERE pid_padre = ?",
+    "SELECT pid, name, user, state, memory, pid_padre FROM process WHERE pid_padre = ?",
     [id]
   );
   connection.release();

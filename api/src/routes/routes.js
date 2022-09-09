@@ -12,7 +12,7 @@ router.get("/last/process", process.getLastProcess);
 
 router.get("/process/:id", process.getProcess);
 
-router.get("/process/:id/son", process.getProcessSon);
+router.get("/son/process/:id", process.getProcessSon);
 
 router.get("/process", process.getProcesses);
 
