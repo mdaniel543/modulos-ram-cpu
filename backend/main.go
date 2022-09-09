@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"os/exec"
+	"strconv"
+	"strings"
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -24,10 +26,6 @@ type Process struct {
 	State    int       `json:"state"`
 	Memory   float32   `json:"memory"`
 	Children []Process `json:"children"`
-}
-
-type CPU struct {
-	Usage int `json:"usage"`
 }
 
 var conn = MySQLConn()
@@ -105,15 +103,19 @@ func postProcesses(data string) {
 func postCPU(data string) {
 	fmt.Println("Insertando CPU en la base de datos")
 	fmt.Println(data)
-	var cpu CPU
-	json.Unmarshal([]byte(data), &cpu)
-	fmt.Println(cpu)
 
+	splt := strings.Split(data, "\n")
+
+	cpu, err := strconv.ParseFloat(splt[0], 32)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(cpu)
 	stmt, err := conn.Prepare("INSERT INTO cpu(percentage) VALUES(?)")
 	if err != nil {
 		fmt.Println(err)
 	}
-	_, err = stmt.Exec(100 - cpu.Usage)
+	_, err = stmt.Exec(cpu)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -137,14 +139,15 @@ func main() {
 			fmt.Println(err)
 		}
 		postProcesses(string(out[:]))
+		time.Sleep(5 * time.Second)
 		// ------------------------------------------------------------------
-		cpu := exec.Command("sh", "-c", "echo \"{ usage:$(vmstat |tail -1|awk '{print $15}') }\"")
+		cpu := exec.Command("sh", "-c", "cat /proc/stat |grep cpu |tail -1|awk '{print ($5*100)/($2+$3+$4+$5+$6+$7+$8+$9+$10)}'|awk '{print 100-$1}'")
 		out, err = cpu.CombinedOutput()
 		if err != nil {
 			fmt.Println(err)
 		}
 		postCPU(string(out[:]))
 		// ------------------------------------------------------------------
-		time.Sleep(6 * time.Second)
+		time.Sleep(5 * time.Second)
 	}
 }
