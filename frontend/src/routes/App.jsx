@@ -18,8 +18,6 @@ function App() {
   });
   const [rams, setRams] = useState([]);
   const [cpu, setCpu] = useState({
-    free: 0,
-    used: 0,
     percentage: 0,
   });
   const [cpus, setCpus] = useState([]);
@@ -52,6 +50,14 @@ function App() {
     const resp4 = axios.get("http://localhost:3000/api/process");
     resp4.then((response) => {
       setProcess(response.data);
+    });
+    const resp5 = axios.get("http://localhost:3000/api/cpu/last");
+    resp5.then((response) => {
+      setCpu(response.data[0]);
+    });
+    const resp6 = axios.get("http://localhost:3000/api/cpu");
+    resp6.then((response) => {
+      setCpus(response.data);
     });
   }, []);
 
@@ -238,8 +244,24 @@ function App() {
                 <Tab.Pane eventKey="first-2">
                   {rams && <AreaChart data={rams} />}
                 </Tab.Pane>
-                <Tab.Pane eventKey="second">{cpu && <></>}</Tab.Pane>
-                <Tab.Pane eventKey="second-2">{cpus && <></>}</Tab.Pane>
+                <Tab.Pane eventKey="second">
+                  {cpu && (
+                    <>
+                      <DoughnutChart data={cpu} title={"CPU"} />
+                      <h2 style={{ textAlign: "center", marginTop: "20px" }}>
+                        {" "}
+                        {cpu.percentage}%{" "}
+                      </h2>
+                    </>
+                  )}
+                </Tab.Pane>
+                <Tab.Pane eventKey="second-2">
+                  {cpus && (
+                    <>
+                      <AreaChart data={cpus} />
+                    </>
+                  )}
+                </Tab.Pane>
                 <Tab.Pane eventKey="third">
                   {countProcess && (
                     <>

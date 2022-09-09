@@ -23,7 +23,7 @@ ChartJS.register(
   Legend
 );
 
-function AreaChart({ data }) {
+function AreaChart({ data, title }) {
   const options = {
     responsive: true,
     maintainAspectRatio: false,
@@ -33,7 +33,7 @@ function AreaChart({ data }) {
       },
       title: {
         display: true,
-        text: "Uso de RAM",
+        text: `Uso de ${title}`,
       },
     },
     scales: {
@@ -53,7 +53,7 @@ function AreaChart({ data }) {
     datasets: [
       {
         fill: true,
-        label: "Porcentaje de uso de RAM",
+        label: `Porcentaje de uso de ${title}`,
         data: data.map((item) => item.percentage),
         borderColor: "rgb(53, 162, 235)",
         backgroundColor: "rgba(53, 162, 235, 0.5)",

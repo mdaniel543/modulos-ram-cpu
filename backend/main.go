@@ -26,6 +26,10 @@ type Process struct {
 	Children []Process `json:"children"`
 }
 
+type CPU struct {
+	Usage int `json:"usage"`
+}
+
 var conn = MySQLConn()
 
 func MySQLConn() *sql.DB {
@@ -57,11 +61,24 @@ func postRam(data string) {
 	fmt.Println("Ram insertada")
 }
 
+func deleteProcesses() {
+	fmt.Println("Eliminando procesos de la base de datos...")
+	stmt, err := conn.Prepare("DELETE FROM process")
+	if err != nil {
+		fmt.Println(err)
+	}
+	_, err = stmt.Exec()
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println("Procesos eliminados")
+}
+
 func postProcesses(data string) {
-	fmt.Println("Insertando procesos en la base de datos")
-	fmt.Println(data)
 	var processes []Process
 	json.Unmarshal([]byte(data), &processes)
+	deleteProcesses()
+	fmt.Println("Insertando procesos en la base de datos ...")
 	for _, process := range processes {
 		stmt, err := conn.Prepare("INSERT INTO process(pid, name, user, state, memory) VALUES(?, ?, ?, ?, ?)")
 		if err != nil {
@@ -83,6 +100,24 @@ func postProcesses(data string) {
 		}
 	}
 	fmt.Println("Procesos insertados")
+}
+
+func postCPU(data string) {
+	fmt.Println("Insertando CPU en la base de datos")
+	fmt.Println(data)
+	var cpu CPU
+	json.Unmarshal([]byte(data), &cpu)
+	fmt.Println(cpu)
+
+	stmt, err := conn.Prepare("INSERT INTO cpu(percentage) VALUES(?)")
+	if err != nil {
+		fmt.Println(err)
+	}
+	_, err = stmt.Exec(100 - cpu.Usage)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println("CPU insertada")
 
 }
 
@@ -96,13 +131,20 @@ func main() {
 		}
 		postRam(string(out[:]))
 		// ------------------------------------------------------------------
-		time.Sleep(1 * time.Second)
 		proccess := exec.Command("sh", "-c", "cat /proc/cpu_201709450")
 		out, err = proccess.CombinedOutput()
 		if err != nil {
 			fmt.Println(err)
 		}
 		postProcesses(string(out[:]))
-		time.Sleep(8 * time.Second)
+		// ------------------------------------------------------------------
+		cpu := exec.Command("sh", "-c", "echo \"{ usage:$(vmstat 1 2|tail -1|awk '{print $15}') }\"")
+		out, err = cpu.CombinedOutput()
+		if err != nil {
+			fmt.Println(err)
+		}
+		postCPU(string(out[:]))
+		// ------------------------------------------------------------------
+		time.Sleep(6 * time.Second)
 	}
 }
