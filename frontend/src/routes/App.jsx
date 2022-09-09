@@ -34,29 +34,29 @@ function App() {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      const resp = axios.get("http://localhost:3000/api/ram/last");
+      const resp = axios.get(import.meta.env.VITE_BACKEND_URL + "/api/ram/last");
       resp.then((response) => {
         setRam(response.data[0]);
         console.log(response.data[0]);
       });
-      const resp2 = axios.get("http://localhost:3000/api/ram");
+      const resp2 = axios.get(import.meta.env.VITE_BACKEND_URL +  "/api/ram");
       resp2.then((response) => {
         setRams(response.data);
       });
-      const resp3 = axios.get("http://localhost:3000/api/count/process");
+      const resp3 = axios.get(import.meta.env.VITE_BACKEND_URL + "/api/count/process");
       resp3.then((response) => {
         console.log(response.data);
         setCountProcess(response.data);
       });
-      const resp4 = axios.get("http://localhost:3000/api/process");
+      const resp4 = axios.get(import.meta.env.VITE_BACKEND_URL + "/api/process");
       resp4.then((response) => {
         setProcess(response.data);
       });
-      const resp5 = axios.get("http://localhost:3000/api/cpu/last");
+      const resp5 = axios.get(import.meta.env.VITE_BACKEND_URL + "/api/cpu/last");
       resp5.then((response) => {
         setCpu(response.data[0]);
       });
-      const resp6 = axios.get("http://localhost:3000/api/cpu");
+      const resp6 = axios.get(import.meta.env.VITE_BACKEND_URL + "/api/cpu");
       resp6.then((response) => {
         setCpus(response.data);
       });
