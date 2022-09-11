@@ -10,7 +10,8 @@ services:
 
   web:
     container_name: web
-    image: mdaniel543/web
+    image: web
+    build: ./web
     ports:
       - "4000:80"
     restart: always
@@ -18,7 +19,3 @@ services:
       - api
     links:
       - api
-
-
-
-

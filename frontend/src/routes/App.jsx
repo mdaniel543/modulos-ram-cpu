@@ -34,29 +34,29 @@ function App() {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      const resp = axios.get(import.meta.env.VITE_BACKEND_URL + "/api/ram/last");
+      const resp = axios.get("http://34.125.81.117:3000" + "/api/ram/last");
       resp.then((response) => {
         setRam(response.data[0]);
         console.log(response.data[0]);
       });
-      const resp2 = axios.get(import.meta.env.VITE_BACKEND_URL +  "/api/ram");
+      const resp2 = axios.get("http://34.125.81.117:3000" +  "/api/ram");
       resp2.then((response) => {
         setRams(response.data);
       });
-      const resp3 = axios.get(import.meta.env.VITE_BACKEND_URL + "/api/count/process");
+      const resp3 = axios.get("http://34.125.81.117:3000" + "/api/count/process");
       resp3.then((response) => {
         console.log(response.data);
         setCountProcess(response.data);
       });
-      const resp4 = axios.get(import.meta.env.VITE_BACKEND_URL + "/api/process");
+      const resp4 = axios.get("http://34.125.81.117:3000" + "/api/process");
       resp4.then((response) => {
         setProcess(response.data);
       });
-      const resp5 = axios.get(import.meta.env.VITE_BACKEND_URL + "/api/cpu/last");
+      const resp5 = axios.get("http://34.125.81.117:3000" + "/api/cpu/last");
       resp5.then((response) => {
         setCpu(response.data[0]);
       });
-      const resp6 = axios.get(import.meta.env.VITE_BACKEND_URL + "/api/cpu");
+      const resp6 = axios.get("http://34.125.81.117:3000" + "/api/cpu");
       resp6.then((response) => {
         setCpus(response.data);
       });
@@ -197,7 +197,7 @@ function App() {
                           eventKey="third-2"
                           onClick={() => setTab_key("third-2")}
                         >
-                          📈 Proceso Padres
+                          📈 Proceso Padres.
                         </Nav.Link>
                         {showHijos ? (
                           <Nav.Link
