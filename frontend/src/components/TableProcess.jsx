@@ -10,7 +10,7 @@ function TableProcess({ data, accion, show, setSons }) {
 
   const showHijos = (pid) => {
     console.log(pid);
-    const resp = axios.get(`http://localhost:3000/api/son/process/${pid}`);
+    const resp = axios.get(`http://34.125.81.117:3000/api/son/process/${pid}`);
     resp.then((res) => {
       setSons(res.data);
       show();
