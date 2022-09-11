@@ -1,4 +1,4 @@
-version: "3"
+version: "3.8"
 
 services:
   api:
@@ -7,6 +7,8 @@ services:
     ports:
       - "3000:3000"
     restart: always
+    networks:
+      - shared
 
   web:
     container_name: web
@@ -16,8 +18,9 @@ services:
     restart: always
     depends_on:
       - api
-    network_mode: "host"
+    networks: 
+      - shared
 
 networks:
-  host:
-    external: true
+  shared:
+
