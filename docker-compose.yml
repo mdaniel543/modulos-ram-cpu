@@ -11,7 +11,7 @@ services:
   web:
     container_name: web
     image: web
-    build: ./web
+    build: ./frontend
     ports:
       - "4000:80"
     restart: always
